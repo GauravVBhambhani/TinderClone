@@ -23,14 +23,19 @@ struct CardView: View {
                 .foregroundStyle(.white)
 
             ZStack (alignment: .bottom) {
-                Image(.gaurav)
-                    .resizable()
-                    .scaledToFill()
+                ZStack (alignment: .top) {
+                    Image(.gaurav)
+                        .resizable()
+                        .scaledToFill()
+
+                    SwipeActionIndicatorView(xOffset: $xOffset) // needs to depend on xoffset to set opacity of the text.
+                    // so we ned to pass it as a binding.
+                }
 
                 UserInfoView()
                     .padding(.horizontal, 30)
             }
-            .frame(width: cardWidth, height: cardHeight)
+            .frame(width: SizeConstants.cardWidth, height: SizeConstants.cardHeight)
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .offset(x: xOffset)
             .rotationEffect(.degrees(degrees))
@@ -55,32 +60,13 @@ private extension CardView {
         let width = value.translation.width
 
         // we take the absolute value because if we swipe left(-ve offset) it wil always be < 0.
-        if abs(width) <= abs(screenCutOff) {
+        if abs(width) <= abs(SizeConstants.screenCutOff) {
             xOffset = 0
             degrees = 0
         } else {
 
         }
     }
-}
-
-extension CardView {
-    var cardWidth: CGFloat {
-        UIScreen.main.bounds.width - 20
-    }
-
-    var cardHeight: CGFloat {
-        UIScreen.main.bounds.height / 1.45
-    }
-
-    // to handle drag gesture for all screen sizes
-    var screenCutOff: CGFloat {
-        ( UIScreen.main.bounds.width / 2 ) * 0.8
-    } // calculates 80% of the half of the Full Screen width.
-    //    if full screen width = 400
-    //    half = 200
-    //    * 0.8 = 200 * 0.8 = 160
-    //    if drag offset is more that 160 points on that screen, consider it swiped.
 }
 
 #Preview {
