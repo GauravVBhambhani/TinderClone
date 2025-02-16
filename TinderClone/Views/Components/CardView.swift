@@ -15,6 +15,14 @@ struct CardView: View {
     @State private var xOffset: CGFloat = 0 // for horizontal positioning
     @State private var degrees: Double = 0 // for rotation
 
+
+    @State private var currentImageIndex = 0
+    @State private var mockImages = [
+        "gaurav",
+        "gaurav2",
+        "gaurav3"
+    ]
+
     var body: some View {
 
         VStack {
@@ -24,9 +32,16 @@ struct CardView: View {
 
             ZStack (alignment: .bottom) {
                 ZStack (alignment: .top) {
-                    Image(.gaurav)
+                    Image(mockImages[currentImageIndex])
                         .resizable()
                         .scaledToFill()
+                        .overlay {
+                            ImageScrollingOverlay(currentImageIndex: $currentImageIndex, numberOfImages: mockImages.count)
+                        }
+                    // currentImageIndex is a binding here because we're updating currentImageIndex in ImageScrollingOverlay and then updating it in CardView.
+
+                    CardImageIndicatorView(currentImageIndex: currentImageIndex, numberOfImages: mockImages.count)
+                    // currentImageIndex is not a binding here because we only need to see the value.
 
                     SwipeActionIndicatorView(xOffset: $xOffset) // needs to depend on xoffset to set opacity of the text.
                     // so we ned to pass it as a binding.
@@ -45,7 +60,7 @@ struct CardView: View {
                     .onChanged(onDragChanged) // since it has the same input parameter, we dont have to give it
                     .onEnded(onDragEnded)
             )
-        }
+        } // VStack
     }
 }
 
@@ -63,8 +78,6 @@ private extension CardView {
         if abs(width) <= abs(SizeConstants.screenCutOff) {
             xOffset = 0
             degrees = 0
-        } else {
-
         }
     }
 }
