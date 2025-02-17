@@ -32,17 +32,18 @@ struct MainTabView: View {
             }
 
             Tab {
-                Text("Profile view")
+                CurrentUserProfileView(user: MockData.users[0])
                     .tag(3)
             } label: {
                 Image(systemName: "person")
             }
 
         }
-        .tint(.primary)
+//        .tint(.red)
     }
 }
 
 #Preview {
     MainTabView()
+        .environmentObject(MatchViewModel())
 }

@@ -21,6 +21,10 @@ struct CardView: View {
 
     @ObservedObject var viewModel: CardViewModel
 
+    @State private var showProfileModal = false
+
+    @EnvironmentObject var matchViewModel: MatchViewModel
+
     var body: some View {
 
         VStack {
@@ -42,11 +46,15 @@ struct CardView: View {
                     CardImageIndicatorView(currentImageIndex: currentImageIndex, numberOfImages: imageCount)
                     // currentImageIndex is not a binding here because we only need to see the value.
 
-                    SwipeActionIndicatorView(xOffset: $xOffset) // needs to depend on xoffset to set opacity of the text.
+                    SwipeActionIndicatorView(xOffset: $xOffset)
+                    // needs to depend on xoffset to set opacity of the text.
                     // so we ned to pass it as a binding.
                 }
 
-                UserInfoView(user: user)
+                UserInfoView(user: user, showProfileModal: $showProfileModal)
+            }
+            .fullScreenCover(isPresented: $showProfileModal) {
+                UserProfileView(user: user)
             }
             .onReceive(viewModel.$buttonSwipeAction, perform: { action in
                 onRecieveSwipeAction(action)
@@ -96,6 +104,7 @@ private extension CardView {
             degrees = 12
         } completion: {
             viewModel.removeCard(card)
+            matchViewModel.checkForMatch(withUser: user)
         }
 
     }

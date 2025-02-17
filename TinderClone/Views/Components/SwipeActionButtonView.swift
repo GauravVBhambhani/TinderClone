@@ -16,7 +16,6 @@ struct SwipeActionButtonView: View {
 
             Button {
                 viewModel.buttonSwipeAction = .reject
-
             } label: {
                 Image(systemName: "xmark")
                     .foregroundStyle(.red)
