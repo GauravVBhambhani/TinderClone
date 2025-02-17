@@ -11,7 +11,7 @@ struct MainTabView: View {
     var body: some View {
         TabView {
             Tab {
-                Text("Swiping view")
+                CardStackView()
                     .tag(0)
             } label: {
                 Image(systemName: "flame")
